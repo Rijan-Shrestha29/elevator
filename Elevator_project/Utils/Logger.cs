@@ -18,6 +18,7 @@ namespace Elevator_project.Utils
             // Initialize in-memory DataTable for UI
             logTable = new DataTable();
             logTable.Columns.Add("Timestamp", typeof(string));
+            logTable.Columns.Add("Type", typeof(string));
             logTable.Columns.Add("Message", typeof(string));
 
             grid.DataSource = logTable;
@@ -28,25 +29,40 @@ namespace Elevator_project.Utils
 
         public void Log(string message, string type = "INFO")
         {
-            // 1️⃣ Add to UI table
-            logTable.Rows.Add(DateTime.Now.ToString("HH:mm:ss"), message);
+            string timestamp = DateTime.Now.ToString("HH:mm:ss");
+
+            // Add to UI table
+            logTable.Rows.Add(timestamp, type, message);
 
             try
             {
-                // 2️⃣ Save into database
+                // Save into database
                 DatabaseManager.InsertLog(message, type);
             }
             catch (Exception ex)
             {
-                // 3️⃣ If database logging fails, show a warning in UI but don't crash
-                logTable.Rows.Add(DateTime.Now.ToString("HH:mm:ss"),
-                    $"[LoggerError] Failed to write to DB: {ex.Message}");
+                // If database logging fails, show a warning in UI but don't crash
+                logTable.Rows.Add(DateTime.Now.ToString("HH:mm:ss"), "ERROR",
+                    $"Failed to write to DB: {ex.Message}");
+            }
+
+            // Auto-scroll to the latest log
+            if (grid.Rows.Count > 0)
+            {
+                grid.FirstDisplayedScrollingRowIndex = grid.Rows.Count - 1;
             }
         }
 
-        public static void ShowLogs()
+        public void ShowLogs()
         {
-            MessageBox.Show("Logs are displayed below the control panel.", "Elevator Log");
+            MessageBox.Show("Logs are displayed in the table below the control panel.\n\n" +
+                          "You can see:\n" +
+                          "• Button presses\n" +
+                          "• Door operations (open/close)\n" +
+                          "• Movement between floors\n" +
+                          "• Arrival notifications\n" +
+                          "• System warnings", "Elevator Log Information",
+                          MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Elevator_project
         private void InitializeSimulation()
         {
             logger = new Logger(dgvLogs);
-            controller = new ElevatorController(pnlElevator, lblDisplay, logger);
+            controller = new ElevatorController(pnlElevator, lblDisplay, logger, pnlFloor0Doors, pnlFloor1Doors);
 
             // Attach button events
             btnFloor0.Click += (s, e) => controller.GoToFloor(0);
@@ -28,10 +28,47 @@ namespace Elevator_project
             btnRequest0.Click += (s, e) => controller.GoToFloor(0);
             btnRequest1.Click += (s, e) => controller.GoToFloor(1);
 
-            btnShowLog.Click += (s, e) => Logger.ShowLogs();
+            btnShowLog.Click += (s, e) => logger.ShowLogs();
+
+            // Add door control buttons
+            btnOpenDoors.Click += (s, e) => controller.ManualOpenDoors();
+            btnCloseDoors.Click += (s, e) => controller.ManualCloseDoors();
+
+            // Set correct Z-order - elevator BETWEEN shaft background and floor doors
+            SetCorrectZOrder();
         }
 
-        private void MainForm_Load(object sender, EventArgs e) { }
+        private void SetCorrectZOrder()
+        {
+            // The key is the ORDER OF CONTROLS in pnlElevatorShaft
+            // Controls are drawn in the order they appear in the Controls collection
+            // First = Backmost, Last = Frontmost
+
+            // Current order in pnlElevatorShaft:
+            // 1. pnlElevator (added first - backmost)
+            // 2. btnRequest0, pnlFloor0Doors, btnRequest1, lblFloor1, lblFloor0, pnlFloor1Doors (added later - frontmost)
+
+            // This gives us:
+            // BACK: pnlElevatorShaft background
+            // MIDDLE: pnlElevator (moving cabin)
+            // FRONT: pnlFloor0Doors, pnlFloor1Doors, labels, buttons
+
+            // Make sure floor doors are in front
+            pnlFloor0Doors.BringToFront();
+            pnlFloor1Doors.BringToFront();
+
+            // Make sure labels and buttons are in front
+            lblFloor0.BringToFront();
+            lblFloor1.BringToFront();
+            btnRequest0.BringToFront();
+            btnRequest1.BringToFront();
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            // Ensure Z-order is maintained after load
+            SetCorrectZOrder();
+        }
 
         private void BtnShowLog_Click(object sender, EventArgs e) { }
 
@@ -39,17 +76,12 @@ namespace Elevator_project
 
         private void GrpControlPanel_Enter(object sender, EventArgs e) { }
 
-        private void PnlFloor1Doors_Paint(object sender, EventArgs e) { }
+        private void PnlFloor1Doors_Paint(object sender, PaintEventArgs e) { }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
             controller?.Dispose();
             base.OnFormClosed(e);
-        }
-
-        private void panel2_Paint(object sender, PaintEventArgs e)
-        {
-
         }
     }
 }

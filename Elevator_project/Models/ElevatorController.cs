@@ -15,7 +15,7 @@ namespace Elevator_project.Models
         private int targetFloor;
         private int targetY;
 
-        // Floor positions
+        // Floor positions - CRITICAL: These must match the actual positions in the form
         private readonly int floor0Y;
         private readonly int floor1Y;
 
@@ -42,19 +42,19 @@ namespace Elevator_project.Models
         private bool openingElevatorDoors;
         private bool openingFloorDoors;
 
-        public ElevatorController(Panel panel, Label display, Logger log)
+        public ElevatorController(Panel panel, Label display, Logger log, Panel floor0DoorsContainer, Panel floor1DoorsContainer)
         {
             elevator = new Elevator();
             elevatorPanel = panel;
             displayLabel = display;
             logger = log;
 
-            // Calculate floor positions
-            floor0Y = elevatorPanel.Parent.Height - elevatorPanel.Height - 20;
-            floor1Y = 20;
+            // CRITICAL FIX: Correct floor positions that match the designer
+            floor0Y = 340; // pnlElevator.Location.Y for floor 0
+            floor1Y = 60; // pnlElevator.Location.Y for floor 1 (80 + 60)
 
-            // Resize elevator to fit properly in shaft
-            ResizeElevatorToFitShaft();
+            // Initialize door references
+            InitializeDoors(floor0DoorsContainer, floor1DoorsContainer);
 
             moveTimer = new Timer { Interval = 30 };
             moveTimer.Tick += MoveElevatorTick;
@@ -72,85 +72,88 @@ namespace Elevator_project.Models
             elevator.FloorChanged += OnFloorChanged;
             elevator.MovementCompleted += OnMovementCompleted;
 
-            InitializeDoors();
+            // Set initial elevator position to floor 0
+            elevatorPanel.Top = floor0Y;
+
+            // Make sure elevator is visible
+            elevatorPanel.Visible = true;
+            elevatorPanel.BringToFront();
+
+            // Initialize door positions to closed state
+            ResetAllDoors();
+
+            // Log initialization
+            logger.Log("Elevator system initialized at Floor 0", "SYSTEM");
         }
 
-        private void ResizeElevatorToFitShaft()
+        private void InitializeDoors(Panel floor0DoorsContainer, Panel floor1DoorsContainer)
         {
-            if (elevatorPanel.Parent is Panel shaftPanel)
-            {
-                int shaftWidth = shaftPanel.Width;
-
-                elevatorPanel.Width = 160;
-                elevatorPanel.Height = 170;
-
-                elevatorPanel.Left = (shaftWidth - elevatorPanel.Width) / 2;
-                elevatorPanel.Top = (elevator.CurrentFloor == 0) ? floor0Y : floor1Y;
-            }
-        }
-
-        private void InitializeDoors()
-        {
+            // Get elevator doors
             elevatorDoorLeft = elevatorPanel.Controls["elevatorDoorLeft"] as Panel;
             elevatorDoorRight = elevatorPanel.Controls["elevatorDoorRight"] as Panel;
 
-            if (elevatorDoorLeft != null && elevatorDoorRight != null)
+            // Get floor 0 doors
+            if (floor0DoorsContainer != null)
             {
-                int doorWidth = elevatorPanel.Width / 2;
-                int doorHeight = elevatorPanel.Height;
-
-                elevatorDoorLeft.Size = new System.Drawing.Size(doorWidth, doorHeight);
-                elevatorDoorRight.Size = new System.Drawing.Size(doorWidth, doorHeight);
-                elevatorDoorRight.Location = new System.Drawing.Point(doorWidth, 0);
+                floor0DoorLeft = floor0DoorsContainer.Controls["floor0DoorLeft"] as Panel;
+                floor0DoorRight = floor0DoorsContainer.Controls["floor0DoorRight"] as Panel;
             }
 
-            if (elevatorPanel.Parent is Panel shaftPanel)
+            // Get floor 1 doors
+            if (floor1DoorsContainer != null)
             {
-                if (shaftPanel.Controls["pnlFloor0Doors"] is Panel floor0Container)
-                {
-                    floor0Container.Size = new System.Drawing.Size(elevatorPanel.Width, elevatorPanel.Height);
-                    floor0Container.Location = new System.Drawing.Point(elevatorPanel.Left, floor0Y);
-
-                    floor0DoorLeft = CreateFloorDoor(floor0Container, "floor0DoorLeft", 0);
-                    floor0DoorRight = CreateFloorDoor(floor0Container, "floor0DoorRight", elevatorPanel.Width / 2);
-                }
-
-                if (shaftPanel.Controls["pnlFloor1Doors"] is Panel floor1Container)
-                {
-                    floor1Container.Size = new System.Drawing.Size(elevatorPanel.Width, elevatorPanel.Height);
-                    floor1Container.Location = new System.Drawing.Point(elevatorPanel.Left, floor1Y);
-
-                    floor1DoorLeft = CreateFloorDoor(floor1Container, "floor1DoorLeft", 0);
-                    floor1DoorRight = CreateFloorDoor(floor1Container, "floor1DoorRight", elevatorPanel.Width / 2);
-                }
+                floor1DoorLeft = floor1DoorsContainer.Controls["floor1DoorLeft"] as Panel;
+                floor1DoorRight = floor1DoorsContainer.Controls["floor1DoorRight"] as Panel;
             }
 
-            UpdateAllDoorPositions();
+            // Ensure all doors are properly sized and visible
+            EnsureDoorSizing();
         }
 
-        private static Panel CreateFloorDoor(Panel container, string name, int xPos)
+        private void EnsureDoorSizing()
         {
-            int doorWidth = container.Width / 2;
-            var door = new Panel
+            // All doors should be 80x170
+            int doorWidth = 80;
+            int doorHeight = 170;
+
+            if (elevatorDoorLeft != null)
             {
-                Name = name,
-                Size = new System.Drawing.Size(doorWidth, container.Height),
-                Location = new System.Drawing.Point(xPos, 0)
-            };
-            container.Controls.Add(door);
-            door.BringToFront();
-            return door;
+                elevatorDoorLeft.Size = new System.Drawing.Size(doorWidth, doorHeight);
+                elevatorDoorRight.Size = new System.Drawing.Size(doorWidth, doorHeight);
+                elevatorDoorLeft.Visible = true;
+                elevatorDoorRight.Visible = true;
+            }
+
+            if (floor0DoorLeft != null)
+            {
+                floor0DoorLeft.Size = new System.Drawing.Size(doorWidth, doorHeight);
+                floor0DoorRight.Size = new System.Drawing.Size(doorWidth, doorHeight);
+            }
+
+            if (floor1DoorLeft != null)
+            {
+                floor1DoorLeft.Size = new System.Drawing.Size(doorWidth, doorHeight);
+                floor1DoorRight.Size = new System.Drawing.Size(doorWidth, doorHeight);
+            }
+        }
+
+        private void ResetAllDoors()
+        {
+            doorOpenWidth = 0;
+            floor0DoorOpenWidth = 0;
+            floor1DoorOpenWidth = 0;
+            UpdateAllDoorPositions();
         }
 
         public void GoToFloor(int floor)
         {
             if (elevator.IsMoving)
             {
-                logger.Log($"Elevator is currently moving — request to floor {floor} ignored.");
+                logger.Log($"Elevator is currently moving — request to floor {floor} ignored.", "WARNING");
                 return;
             }
 
-            logger.Log($"Request: Move to floor {floor}");
+            logger.Log($"Button pressed: Move to floor {floor}", "INFO");
             targetFloor = floor;
 
             if (elevator.CurrentFloor == targetFloor)
@@ -178,9 +181,11 @@ namespace Elevator_project.Models
 
             targetY = (targetFloor == 0) ? floor0Y : floor1Y;
 
-            logger.Log($"Moving from floor {elevator.CurrentFloor} to floor {targetFloor}");
+            logger.Log($"Moving from floor {elevator.CurrentFloor} to floor {targetFloor}", "MOVEMENT");
             displayLabel.Text = $"Moving to {targetFloor}";
 
+            // Start elevator movement
+            elevator.MoveToFloor(targetFloor);
             moveTimer.Start();
         }
 
@@ -194,8 +199,9 @@ namespace Elevator_project.Models
             openingElevatorDoors = true;
             doorTimer.Start();
 
-            logger.Log($"Opening doors at Floor {elevator.CurrentFloor}");
+            logger.Log($"Opening doors at Floor {elevator.CurrentFloor}", "DOOR");
 
+            // Start floor door animation with a small delay
             var delayTimer = new Timer { Interval = 5 };
             delayTimer.Tick += (s, e) =>
             {
@@ -219,7 +225,7 @@ namespace Elevator_project.Models
             doorTimer.Start();
             floorDoorTimer.Start();
 
-            logger.Log($"Closing doors at Floor {elevator.CurrentFloor}");
+            logger.Log($"Closing doors at Floor {elevator.CurrentFloor}", "DOOR");
 
             if (moveAfterClosing)
             {
@@ -233,7 +239,7 @@ namespace Elevator_project.Models
 
             if (doorsOpen && !isClosingDoors && !elevator.IsMoving)
             {
-                logger.Log($"Auto-closing doors after 3 seconds at Floor {elevator.CurrentFloor}");
+                logger.Log($"Auto-closing doors after 3 seconds at Floor {elevator.CurrentFloor}", "DOOR");
                 CloseDoors();
             }
         }
@@ -305,11 +311,11 @@ namespace Elevator_project.Models
                 floorDoorTimer.Stop();
                 isOpeningDoors = false;
                 doorsOpen = true;
-                logger.Log($"Doors opened at Floor {elevator.CurrentFloor}");
+                logger.Log($"Doors fully opened at Floor {elevator.CurrentFloor}", "DOOR");
                 displayLabel.Text = $"Floor {elevator.CurrentFloor} - Open";
 
+                // Start auto-close timer
                 autoCloseTimer.Start();
-                logger.Log($"Auto-close timer started (3 seconds) at Floor {elevator.CurrentFloor}");
             }
         }
 
@@ -352,7 +358,9 @@ namespace Elevator_project.Models
                 floorDoorTimer.Stop();
                 isClosingDoors = false;
                 doorsOpen = false;
-                logger.Log($"Doors closed at Floor {elevator.CurrentFloor}");
+                logger.Log($"Doors fully closed at Floor {elevator.CurrentFloor}", "DOOR");
+                displayLabel.Text = $"Floor {elevator.CurrentFloor}";
+
                 autoCloseTimer.Stop();
 
                 if (doorTimer.Tag != null && doorTimer.Tag.ToString() == "move_after_close")
@@ -368,20 +376,22 @@ namespace Elevator_project.Models
             if (elevatorDoorLeft != null)
                 elevatorDoorLeft.Location = new System.Drawing.Point(-doorOpenWidth, 0);
             if (elevatorDoorRight != null)
-                elevatorDoorRight.Location = new System.Drawing.Point(elevatorPanel.Width / 2 + doorOpenWidth, 0);
+                elevatorDoorRight.Location = new System.Drawing.Point(elevatorDoorLeft.Width + doorOpenWidth, 0);
         }
 
         private void UpdateFloorDoorPositions()
         {
+            // Floor 0 doors
             if (floor0DoorLeft != null)
                 floor0DoorLeft.Location = new System.Drawing.Point(-floor0DoorOpenWidth, 0);
             if (floor0DoorRight != null)
-                floor0DoorRight.Location = new System.Drawing.Point(elevatorPanel.Width / 2 + floor0DoorOpenWidth, 0);
+                floor0DoorRight.Location = new System.Drawing.Point(floor0DoorLeft.Width + floor0DoorOpenWidth, 0);
 
+            // Floor 1 doors
             if (floor1DoorLeft != null)
                 floor1DoorLeft.Location = new System.Drawing.Point(-floor1DoorOpenWidth, 0);
             if (floor1DoorRight != null)
-                floor1DoorRight.Location = new System.Drawing.Point(elevatorPanel.Width / 2 + floor1DoorOpenWidth, 0);
+                floor1DoorRight.Location = new System.Drawing.Point(floor1DoorLeft.Width + floor1DoorOpenWidth, 0);
         }
 
         private void UpdateAllDoorPositions()
@@ -409,13 +419,22 @@ namespace Elevator_project.Models
         private void OnFloorChanged(object sender, int floor)
         {
             displayLabel.Text = $"Floor {floor}";
+            logger.Log($"Reached floor {floor}", "ARRIVAL");
         }
 
         private void OnMovementCompleted(object sender, EventArgs e)
         {
-            logger.Log($"Elevator arrived at Floor {elevator.CurrentFloor}");
+            logger.Log($"Elevator arrived at Floor {elevator.CurrentFloor}", "ARRIVAL");
             displayLabel.Text = $"Floor {elevator.CurrentFloor}";
             OpenDoors();
+        }
+
+        public void ManualOpenDoors()
+        {
+            if (!doorsOpen && !isOpeningDoors && !elevator.IsMoving)
+            {
+                OpenDoors();
+            }
         }
 
         public void ManualCloseDoors()

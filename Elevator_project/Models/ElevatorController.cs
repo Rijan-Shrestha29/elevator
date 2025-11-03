@@ -49,7 +49,7 @@ namespace Elevator_project.Models
             displayLabel = display;
             logger = log;
 
-            // Calculate floor positions - ensure elevator fits within shaft
+            // Calculate floor positions
             floor0Y = elevatorPanel.Parent.Height - elevatorPanel.Height - 20;
             floor1Y = 20;
 
@@ -66,7 +66,7 @@ namespace Elevator_project.Models
             floorDoorTimer.Tick += FloorDoorAnimationTick;
 
             // Auto-close timer - 3 seconds
-            autoCloseTimer = new Timer { Interval = 3000 }; // 3 seconds
+            autoCloseTimer = new Timer { Interval = 3000 };
             autoCloseTimer.Tick += AutoCloseDoors;
 
             elevator.FloorChanged += OnFloorChanged;
@@ -77,30 +77,23 @@ namespace Elevator_project.Models
 
         private void ResizeElevatorToFitShaft()
         {
-            // Make elevator slightly smaller than door openings to prevent visual overlap
             if (elevatorPanel.Parent is Panel shaftPanel)
             {
                 int shaftWidth = shaftPanel.Width;
 
-                // Set elevator size to fit properly within shaft and doors
                 elevatorPanel.Width = 160;
                 elevatorPanel.Height = 170;
 
-                // Center elevator in shaft
                 elevatorPanel.Left = (shaftWidth - elevatorPanel.Width) / 2;
-
-                // Set initial position based on current floor
                 elevatorPanel.Top = (elevator.CurrentFloor == 0) ? floor0Y : floor1Y;
             }
         }
 
         private void InitializeDoors()
         {
-            // Find existing elevator doors and resize them
             elevatorDoorLeft = elevatorPanel.Controls["elevatorDoorLeft"] as Panel;
             elevatorDoorRight = elevatorPanel.Controls["elevatorDoorRight"] as Panel;
 
-            // Resize elevator doors to match new elevator size
             if (elevatorDoorLeft != null && elevatorDoorRight != null)
             {
                 int doorWidth = elevatorPanel.Width / 2;
@@ -111,10 +104,8 @@ namespace Elevator_project.Models
                 elevatorDoorRight.Location = new System.Drawing.Point(doorWidth, 0);
             }
 
-            // Find floor door containers and resize them
             if (elevatorPanel.Parent is Panel shaftPanel)
             {
-                // Floor 0 doors
                 if (shaftPanel.Controls["pnlFloor0Doors"] is Panel floor0Container)
                 {
                     floor0Container.Size = new System.Drawing.Size(elevatorPanel.Width, elevatorPanel.Height);
@@ -124,7 +115,6 @@ namespace Elevator_project.Models
                     floor0DoorRight = CreateFloorDoor(floor0Container, "floor0DoorRight", elevatorPanel.Width / 2);
                 }
 
-                // Floor 1 doors
                 if (shaftPanel.Controls["pnlFloor1Doors"] is Panel floor1Container)
                 {
                     floor1Container.Size = new System.Drawing.Size(elevatorPanel.Width, elevatorPanel.Height);
@@ -144,8 +134,6 @@ namespace Elevator_project.Models
             var door = new Panel
             {
                 Name = name,
-                BackColor = System.Drawing.Color.FromArgb(120, 120, 150),
-                BorderStyle = BorderStyle.FixedSingle,
                 Size = new System.Drawing.Size(doorWidth, container.Height),
                 Location = new System.Drawing.Point(xPos, 0)
             };
@@ -165,7 +153,6 @@ namespace Elevator_project.Models
             logger.Log($"Request: Move to floor {floor}");
             targetFloor = floor;
 
-            // If already at target floor, just open doors
             if (elevator.CurrentFloor == targetFloor)
             {
                 if (!doorsOpen)
@@ -175,7 +162,6 @@ namespace Elevator_project.Models
                 return;
             }
 
-            // Close doors before moving
             if (doorsOpen)
             {
                 CloseDoors(true);
@@ -188,11 +174,9 @@ namespace Elevator_project.Models
 
         private void StartMovement()
         {
-            // Stop auto-close timer if it's running
             autoCloseTimer.Stop();
 
             targetY = (targetFloor == 0) ? floor0Y : floor1Y;
-            int step = (targetY < elevatorPanel.Top) ? -5 : 5;
 
             logger.Log($"Moving from floor {elevator.CurrentFloor} to floor {targetFloor}");
             displayLabel.Text = $"Moving to {targetFloor}";
@@ -206,17 +190,12 @@ namespace Elevator_project.Models
 
             isOpeningDoors = true;
             isClosingDoors = false;
-
-            // Stop auto-close timer when opening doors
             autoCloseTimer.Stop();
-
-            // Start elevator doors first
             openingElevatorDoors = true;
             doorTimer.Start();
 
             logger.Log($"Opening doors at Floor {elevator.CurrentFloor}");
 
-            // Start floor doors after 5ms delay
             var delayTimer = new Timer { Interval = 5 };
             delayTimer.Tick += (s, e) =>
             {
@@ -234,14 +213,9 @@ namespace Elevator_project.Models
 
             isClosingDoors = true;
             isOpeningDoors = false;
-
-            // Stop auto-close timer when manually closing doors
             autoCloseTimer.Stop();
-
-            // Start closing both doors simultaneously for better visual
             openingElevatorDoors = false;
             openingFloorDoors = false;
-
             doorTimer.Start();
             floorDoorTimer.Start();
 
@@ -253,7 +227,6 @@ namespace Elevator_project.Models
             }
         }
 
-        // Auto-close doors after 3 seconds
         private void AutoCloseDoors(object sender, EventArgs e)
         {
             autoCloseTimer.Stop();
@@ -335,7 +308,6 @@ namespace Elevator_project.Models
                 logger.Log($"Doors opened at Floor {elevator.CurrentFloor}");
                 displayLabel.Text = $"Floor {elevator.CurrentFloor} - Open";
 
-                // Start auto-close timer when doors are fully opened
                 autoCloseTimer.Start();
                 logger.Log($"Auto-close timer started (3 seconds) at Floor {elevator.CurrentFloor}");
             }
@@ -381,8 +353,6 @@ namespace Elevator_project.Models
                 isClosingDoors = false;
                 doorsOpen = false;
                 logger.Log($"Doors closed at Floor {elevator.CurrentFloor}");
-
-                // Stop auto-close timer when doors are closed
                 autoCloseTimer.Stop();
 
                 if (doorTimer.Tag != null && doorTimer.Tag.ToString() == "move_after_close")
@@ -445,12 +415,9 @@ namespace Elevator_project.Models
         {
             logger.Log($"Elevator arrived at Floor {elevator.CurrentFloor}");
             displayLabel.Text = $"Floor {elevator.CurrentFloor}";
-
-            // Open doors after arrival
             OpenDoors();
         }
 
-        // Public method to manually close doors (for external calls)
         public void ManualCloseDoors()
         {
             if (doorsOpen && !isClosingDoors && !elevator.IsMoving)
@@ -459,14 +426,12 @@ namespace Elevator_project.Models
             }
         }
 
-        // Clean up timers
         public void Dispose()
         {
             moveTimer?.Dispose();
             doorTimer?.Dispose();
             floorDoorTimer?.Dispose();
             autoCloseTimer?.Dispose();
-
             GC.SuppressFinalize(this);
         }
     }

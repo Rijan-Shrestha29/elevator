@@ -23,15 +23,15 @@
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             pnlElevatorShaft = new Panel();
+            btnRequest0 = new Button();
+            pnlFloor0Doors = new Panel();
+            btnRequest1 = new Button();
             lblFloor1 = new Label();
             lblFloor0 = new Label();
             pnlFloor1Doors = new Panel();
-            pnlFloor0Doors = new Panel();
             pnlElevator = new Panel();
             elevatorDoorLeft = new Panel();
             elevatorDoorRight = new Panel();
-            btnRequest1 = new Button();
-            btnRequest0 = new Button();
             grpControlPanel = new GroupBox();
             lblDisplay = new Label();
             btnFloor1 = new Button();
@@ -49,46 +49,68 @@
             // 
             // pnlElevatorShaft
             // 
-            pnlElevatorShaft.BackColor = Color.Transparent;
-            pnlElevatorShaft.BackgroundImageLayout = ImageLayout.Stretch;
-            pnlElevatorShaft.BorderStyle = BorderStyle.FixedSingle;
+            pnlElevatorShaft.BackgroundImage = (Image)resources.GetObject("pnlElevatorShaft.BackgroundImage");
+            pnlElevatorShaft.Controls.Add(btnRequest0);
+            pnlElevatorShaft.Controls.Add(pnlFloor0Doors);
+            pnlElevatorShaft.Controls.Add(btnRequest1);
             pnlElevatorShaft.Controls.Add(lblFloor1);
             pnlElevatorShaft.Controls.Add(lblFloor0);
             pnlElevatorShaft.Controls.Add(pnlFloor1Doors);
-            pnlElevatorShaft.Controls.Add(pnlFloor0Doors);
             pnlElevatorShaft.Controls.Add(pnlElevator);
-            pnlElevatorShaft.Location = new Point(260, 50);
+            pnlElevatorShaft.Location = new Point(248, 50);
             pnlElevatorShaft.Name = "pnlElevatorShaft";
             pnlElevatorShaft.Size = new Size(260, 540);
             pnlElevatorShaft.TabIndex = 0;
             // 
+            // btnRequest0
+            // 
+            btnRequest0.BackgroundImage = (Image)resources.GetObject("btnRequest0.BackgroundImage");
+            btnRequest0.BackgroundImageLayout = ImageLayout.Zoom;
+            btnRequest0.Location = new Point(216, 399);
+            btnRequest0.Name = "btnRequest0";
+            btnRequest0.Size = new Size(40, 40);
+            btnRequest0.TabIndex = 3;
+            btnRequest0.UseVisualStyleBackColor = true;
+            // 
+            // pnlFloor0Doors
+            // 
+            pnlFloor0Doors.BackgroundImage = (Image)resources.GetObject("pnlFloor0Doors.BackgroundImage");
+            pnlFloor0Doors.BackgroundImageLayout = ImageLayout.Stretch;
+            pnlFloor0Doors.Location = new Point(50, 337);
+            pnlFloor0Doors.Name = "pnlFloor0Doors";
+            pnlFloor0Doors.Size = new Size(160, 170);
+            pnlFloor0Doors.TabIndex = 3;
+            // 
+            // btnRequest1
+            // 
+            btnRequest1.BackgroundImage = (Image)resources.GetObject("btnRequest1.BackgroundImage");
+            btnRequest1.BackgroundImageLayout = ImageLayout.Zoom;
+            btnRequest1.Location = new Point(216, 122);
+            btnRequest1.Name = "btnRequest1";
+            btnRequest1.Size = new Size(40, 40);
+            btnRequest1.TabIndex = 2;
+            btnRequest1.UseVisualStyleBackColor = true;
+            // 
             // lblFloor1
             // 
             lblFloor1.AutoSize = true;
-            lblFloor1.BackColor = Color.Transparent;
-            lblFloor1.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
-            lblFloor1.ForeColor = Color.White;
-            lblFloor1.Location = new Point(90, 20);
+            lblFloor1.Location = new Point(102, 14);
             lblFloor1.Name = "lblFloor1";
-            lblFloor1.Size = new Size(84, 30);
+            lblFloor1.Size = new Size(55, 20);
             lblFloor1.TabIndex = 0;
             lblFloor1.Text = "Floor 1";
             // 
             // lblFloor0
             // 
             lblFloor0.AutoSize = true;
-            lblFloor0.BackColor = Color.Transparent;
-            lblFloor0.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
-            lblFloor0.ForeColor = Color.White;
-            lblFloor0.Location = new Point(90, 280);
+            lblFloor0.Location = new Point(102, 273);
             lblFloor0.Name = "lblFloor0";
-            lblFloor0.Size = new Size(84, 30);
+            lblFloor0.Size = new Size(55, 20);
             lblFloor0.TabIndex = 1;
             lblFloor0.Text = "Floor 0";
             // 
             // pnlFloor1Doors
             // 
-            pnlFloor1Doors.BackColor = Color.Transparent;
             pnlFloor1Doors.BackgroundImage = (Image)resources.GetObject("pnlFloor1Doors.BackgroundImage");
             pnlFloor1Doors.BackgroundImageLayout = ImageLayout.Stretch;
             pnlFloor1Doors.Location = new Point(50, 60);
@@ -96,18 +118,9 @@
             pnlFloor1Doors.Size = new Size(160, 170);
             pnlFloor1Doors.TabIndex = 2;
             // 
-            // pnlFloor0Doors
-            // 
-            pnlFloor0Doors.BackColor = Color.Transparent;
-            pnlFloor0Doors.BackgroundImageLayout = ImageLayout.Stretch;
-            pnlFloor0Doors.Location = new Point(50, 340);
-            pnlFloor0Doors.Name = "pnlFloor0Doors";
-            pnlFloor0Doors.Size = new Size(160, 170);
-            pnlFloor0Doors.TabIndex = 3;
-            // 
             // pnlElevator
             // 
-            pnlElevator.BackColor = Color.Transparent;
+            pnlElevator.BackColor = SystemColors.ActiveCaptionText;
             pnlElevator.BackgroundImageLayout = ImageLayout.Stretch;
             pnlElevator.Controls.Add(elevatorDoorLeft);
             pnlElevator.Controls.Add(elevatorDoorRight);
@@ -118,7 +131,7 @@
             // 
             // elevatorDoorLeft
             // 
-            elevatorDoorLeft.BackColor = Color.Transparent;
+            elevatorDoorLeft.BackgroundImage = (Image)resources.GetObject("elevatorDoorLeft.BackgroundImage");
             elevatorDoorLeft.BackgroundImageLayout = ImageLayout.Stretch;
             elevatorDoorLeft.Location = new Point(0, 0);
             elevatorDoorLeft.Name = "elevatorDoorLeft";
@@ -127,50 +140,19 @@
             // 
             // elevatorDoorRight
             // 
-            elevatorDoorRight.BackColor = Color.Transparent;
+            elevatorDoorRight.BackgroundImage = (Image)resources.GetObject("elevatorDoorRight.BackgroundImage");
             elevatorDoorRight.BackgroundImageLayout = ImageLayout.Stretch;
             elevatorDoorRight.Location = new Point(80, 0);
             elevatorDoorRight.Name = "elevatorDoorRight";
             elevatorDoorRight.Size = new Size(80, 170);
             elevatorDoorRight.TabIndex = 1;
             // 
-            // btnRequest1
-            // 
-            btnRequest1.BackColor = Color.FromArgb(80, 80, 120);
-            btnRequest1.FlatAppearance.BorderSize = 0;
-            btnRequest1.FlatStyle = FlatStyle.Flat;
-            btnRequest1.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            btnRequest1.ForeColor = Color.White;
-            btnRequest1.Location = new Point(80, 100);
-            btnRequest1.Name = "btnRequest1";
-            btnRequest1.Size = new Size(120, 40);
-            btnRequest1.TabIndex = 2;
-            btnRequest1.Text = "↓  Call";
-            btnRequest1.UseVisualStyleBackColor = false;
-            // 
-            // btnRequest0
-            // 
-            btnRequest0.BackColor = Color.FromArgb(80, 80, 120);
-            btnRequest0.FlatAppearance.BorderSize = 0;
-            btnRequest0.FlatStyle = FlatStyle.Flat;
-            btnRequest0.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            btnRequest0.ForeColor = Color.White;
-            btnRequest0.Location = new Point(80, 500);
-            btnRequest0.Name = "btnRequest0";
-            btnRequest0.Size = new Size(120, 40);
-            btnRequest0.TabIndex = 3;
-            btnRequest0.Text = "↑  Call";
-            btnRequest0.UseVisualStyleBackColor = false;
-            // 
             // grpControlPanel
             // 
-            grpControlPanel.BackColor = Color.Transparent;
-            grpControlPanel.BackgroundImageLayout = ImageLayout.Stretch;
+            grpControlPanel.BackColor = SystemColors.ActiveCaption;
             grpControlPanel.Controls.Add(lblDisplay);
             grpControlPanel.Controls.Add(btnFloor1);
             grpControlPanel.Controls.Add(btnFloor0);
-            grpControlPanel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            grpControlPanel.ForeColor = Color.White;
             grpControlPanel.Location = new Point(560, 50);
             grpControlPanel.Name = "grpControlPanel";
             grpControlPanel.Size = new Size(300, 260);
@@ -180,10 +162,9 @@
             // 
             // lblDisplay
             // 
-            lblDisplay.BackColor = Color.FromArgb(40, 40, 60);
-            lblDisplay.Font = new Font("Consolas", 22F, FontStyle.Bold);
-            lblDisplay.ForeColor = Color.FromArgb(100, 200, 255);
-            lblDisplay.Location = new Point(40, 60);
+            lblDisplay.BackColor = SystemColors.ActiveCaptionText;
+            lblDisplay.ForeColor = SystemColors.ControlLightLight;
+            lblDisplay.Location = new Point(38, 23);
             lblDisplay.Name = "lblDisplay";
             lblDisplay.Size = new Size(220, 60);
             lblDisplay.TabIndex = 0;
@@ -192,12 +173,9 @@
             // 
             // btnFloor1
             // 
-            btnFloor1.BackColor = Color.FromArgb(80, 80, 120);
-            btnFloor1.FlatAppearance.BorderSize = 0;
-            btnFloor1.FlatStyle = FlatStyle.Flat;
-            btnFloor1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            btnFloor1.ForeColor = Color.White;
-            btnFloor1.Location = new Point(70, 150);
+            btnFloor1.BackColor = SystemColors.ActiveCaptionText;
+            btnFloor1.ForeColor = SystemColors.Control;
+            btnFloor1.Location = new Point(75, 112);
             btnFloor1.Name = "btnFloor1";
             btnFloor1.Size = new Size(60, 60);
             btnFloor1.TabIndex = 1;
@@ -206,12 +184,9 @@
             // 
             // btnFloor0
             // 
-            btnFloor0.BackColor = Color.FromArgb(80, 80, 120);
-            btnFloor0.FlatAppearance.BorderSize = 0;
-            btnFloor0.FlatStyle = FlatStyle.Flat;
-            btnFloor0.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            btnFloor0.ForeColor = Color.White;
-            btnFloor0.Location = new Point(150, 150);
+            btnFloor0.BackColor = SystemColors.ActiveCaptionText;
+            btnFloor0.ForeColor = SystemColors.Control;
+            btnFloor0.Location = new Point(156, 112);
             btnFloor0.Name = "btnFloor0";
             btnFloor0.Size = new Size(60, 60);
             btnFloor0.TabIndex = 2;
@@ -220,49 +195,41 @@
             // 
             // btnShowLog
             // 
-            btnShowLog.BackColor = Color.FromArgb(100, 80, 140);
-            btnShowLog.FlatAppearance.BorderSize = 0;
-            btnShowLog.FlatStyle = FlatStyle.Flat;
-            btnShowLog.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            btnShowLog.ForeColor = Color.White;
             btnShowLog.Location = new Point(560, 340);
             btnShowLog.Name = "btnShowLog";
             btnShowLog.Size = new Size(300, 45);
             btnShowLog.TabIndex = 4;
             btnShowLog.Text = "📋 Show Logs";
-            btnShowLog.UseVisualStyleBackColor = false;
+            btnShowLog.UseVisualStyleBackColor = true;
             // 
             // dgvLogs
             // 
             dgvLogs.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvLogs.BackgroundColor = Color.FromArgb(220, 220, 240);
-            dgvLogs.BorderStyle = BorderStyle.Fixed3D;
             dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(80, 80, 120);
+            dataGridViewCellStyle1.BackColor = SystemColors.Control;
             dataGridViewCellStyle1.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            dataGridViewCellStyle1.ForeColor = Color.White;
-            dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(60, 60, 100);
-            dataGridViewCellStyle1.SelectionForeColor = Color.White;
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
             dgvLogs.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvLogs.ColumnHeadersHeight = 35;
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = Color.White;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
             dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle2.ForeColor = Color.FromArgb(50, 50, 80);
-            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(180, 180, 220);
-            dataGridViewCellStyle2.SelectionForeColor = Color.FromArgb(50, 50, 80);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             dgvLogs.DefaultCellStyle = dataGridViewCellStyle2;
-            dgvLogs.EnableHeadersVisualStyles = false;
             dgvLogs.Location = new Point(560, 400);
             dgvLogs.Name = "dgvLogs";
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = Color.FromArgb(240, 240, 255);
+            dataGridViewCellStyle3.BackColor = SystemColors.Control;
             dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle3.ForeColor = Color.FromArgb(50, 50, 80);
-            dataGridViewCellStyle3.SelectionBackColor = Color.FromArgb(180, 180, 220);
-            dataGridViewCellStyle3.SelectionForeColor = Color.FromArgb(50, 50, 80);
+            dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
             dgvLogs.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             dgvLogs.RowHeadersWidth = 25;
@@ -275,11 +242,9 @@
             // 
             // pnlBuildingBackground
             // 
-            pnlBuildingBackground.BackColor = Color.Transparent;
+            pnlBuildingBackground.BackgroundImage = (Image)resources.GetObject("pnlBuildingBackground.BackgroundImage");
             pnlBuildingBackground.BackgroundImageLayout = ImageLayout.Stretch;
             pnlBuildingBackground.Controls.Add(pnlElevatorShaft);
-            pnlBuildingBackground.Controls.Add(btnRequest1);
-            pnlBuildingBackground.Controls.Add(btnRequest0);
             pnlBuildingBackground.Dock = DockStyle.Left;
             pnlBuildingBackground.Location = new Point(0, 0);
             pnlBuildingBackground.Name = "pnlBuildingBackground";
@@ -290,18 +255,14 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(230, 230, 250);
-            BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(980, 740);
             Controls.Add(grpControlPanel);
             Controls.Add(btnShowLog);
             Controls.Add(dgvLogs);
             Controls.Add(pnlBuildingBackground);
-            Font = new Font("Segoe UI", 9F);
-            ForeColor = Color.FromArgb(50, 50, 80);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Elevator Control System - Modern Building";
+            Text = "Elevator Control System";
             pnlElevatorShaft.ResumeLayout(false);
             pnlElevatorShaft.PerformLayout();
             pnlElevator.ResumeLayout(false);

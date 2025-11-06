@@ -19,9 +19,9 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
             pnlElevatorShaft = new Panel();
             pnlElevator = new Panel();
             elevatorDoorRight = new Panel();
@@ -46,6 +46,7 @@
             dgvLogs = new DataGridView();
             timerElevator = new System.Windows.Forms.Timer(components);
             pnlBuildingBackground = new Panel();
+            btnClearLogs = new Button();
             pnlElevatorShaft.SuspendLayout();
             pnlElevator.SuspendLayout();
             pnlFloor0Doors.SuspendLayout();
@@ -287,7 +288,7 @@
             btnShowLog.ForeColor = Color.White;
             btnShowLog.Location = new Point(560, 370);
             btnShowLog.Name = "btnShowLog";
-            btnShowLog.Size = new Size(300, 45);
+            btnShowLog.Size = new Size(250, 45);
             btnShowLog.TabIndex = 4;
             btnShowLog.Text = "📋 Show Logs";
             btnShowLog.UseVisualStyleBackColor = false;
@@ -297,47 +298,38 @@
             dgvLogs.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvLogs.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dgvLogs.BackgroundColor = Color.FromArgb(45, 45, 48);
-
-            // Column header style
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = Color.FromArgb(70, 130, 180);
-            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            dataGridViewCellStyle1.ForeColor = Color.White;
-            dataGridViewCellStyle1.SelectionBackColor = Color.FromArgb(50, 100, 150);
-            dataGridViewCellStyle1.SelectionForeColor = Color.White;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dgvLogs.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = Color.FromArgb(70, 130, 180);
+            dataGridViewCellStyle4.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            dataGridViewCellStyle4.ForeColor = Color.White;
+            dataGridViewCellStyle4.SelectionBackColor = Color.FromArgb(50, 100, 150);
+            dataGridViewCellStyle4.SelectionForeColor = Color.White;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.True;
+            dgvLogs.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             dgvLogs.ColumnHeadersHeight = 35;
-
-            // Cell style
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = Color.FromArgb(60, 60, 60);
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle2.ForeColor = Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(70, 130, 180);
-            dataGridViewCellStyle2.SelectionForeColor = Color.White;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True; // enable wrapping
-            dgvLogs.DefaultCellStyle = dataGridViewCellStyle2;
-
+            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = Color.FromArgb(60, 60, 60);
+            dataGridViewCellStyle5.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle5.ForeColor = Color.White;
+            dataGridViewCellStyle5.SelectionBackColor = Color.FromArgb(70, 130, 180);
+            dataGridViewCellStyle5.SelectionForeColor = Color.White;
+            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.True;
+            dgvLogs.DefaultCellStyle = dataGridViewCellStyle5;
             dgvLogs.EnableHeadersVisualStyles = false;
             dgvLogs.GridColor = Color.FromArgb(80, 80, 80);
             dgvLogs.Location = new Point(560, 430);
             dgvLogs.Name = "dgvLogs";
-
-            // Row header style
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = Color.FromArgb(50, 50, 50);
-            dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle3.ForeColor = Color.White;
-            dataGridViewCellStyle3.SelectionBackColor = Color.FromArgb(70, 130, 180);
-            dataGridViewCellStyle3.SelectionForeColor = Color.White;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
-            dgvLogs.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = Color.FromArgb(50, 50, 50);
+            dataGridViewCellStyle6.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle6.ForeColor = Color.White;
+            dataGridViewCellStyle6.SelectionBackColor = Color.FromArgb(70, 130, 180);
+            dataGridViewCellStyle6.SelectionForeColor = Color.White;
+            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
+            dgvLogs.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
             dgvLogs.RowHeadersWidth = 25;
             dgvLogs.Size = new Size(523, 298);
             dgvLogs.TabIndex = 5;
-
             // 
             // timerElevator
             // 
@@ -354,6 +346,18 @@
             pnlBuildingBackground.Size = new Size(540, 740);
             pnlBuildingBackground.TabIndex = 6;
             // 
+            // btnClearLogs
+            // 
+            btnClearLogs.BackColor = Color.FromArgb(220, 53, 69);
+            btnClearLogs.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnClearLogs.ForeColor = Color.White;
+            btnClearLogs.Location = new Point(820, 370);
+            btnClearLogs.Name = "btnClearLogs";
+            btnClearLogs.Size = new Size(250, 45);
+            btnClearLogs.TabIndex = 7;
+            btnClearLogs.Text = "🗑️ Clear All Logs";
+            btnClearLogs.UseVisualStyleBackColor = false;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -364,6 +368,7 @@
             Controls.Add(btnShowLog);
             Controls.Add(dgvLogs);
             Controls.Add(pnlBuildingBackground);
+            Controls.Add(btnClearLogs);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Elevator Control System";
@@ -404,5 +409,6 @@
         private Panel floor0DoorRight;
         private Panel floor1DoorLeft;
         private Panel floor1DoorRight;
+        private Button btnClearLogs;
     }
 }

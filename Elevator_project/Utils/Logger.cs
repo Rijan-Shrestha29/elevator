@@ -125,54 +125,146 @@ namespace Elevator_project.Utils
                           MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        public void ClearAllLogs()
+        public void ClearLogsWithOptions()
         {
             try
             {
-                // Show confirmation dialog
-                var result = MessageBox.Show(
-                    "Are you sure you want to clear all logs?\nThis action cannot be undone.",
-                    "Confirm Clear Logs",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning,
-                    MessageBoxDefaultButton.Button2);
-
-                if (result == DialogResult.Yes)
+                if (!disconnectedModelAvailable)
                 {
-                    if (disconnectedModelAvailable && dbManager != null)
+                    // Fallback to simple clear if disconnected model unavailable
+                    var result = MessageBox.Show(
+                        "Database connection unavailable. Clear UI logs only?",
+                        "Clear UI Logs",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question);
+
+                    if (result == DialogResult.Yes)
                     {
-                        // Clear from database
-                        int recordsDeleted = dbManager.ClearAllLogs();
-
-                        // Clear from UI
-                        logTable.Clear();
-
-                        // Add confirmation message
-                        Log($"All logs cleared successfully. {recordsDeleted} records deleted.", "SYSTEM");
-
-                        MessageBox.Show(
-                            $"Successfully cleared {recordsDeleted} log entries from database and UI.",
-                            "Logs Cleared",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
-                    }
-                    else
-                    {
-                        // Fallback: Clear only UI
                         logTable.Clear();
                         Log("UI logs cleared (database unavailable)", "SYSTEM");
+                    }
+                    return;
+                }
 
-                        MessageBox.Show(
-                            "UI logs cleared. Database logs could not be cleared due to connection issues.",
-                            "Partial Clear",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning);
+                using (var optionsForm = new Form()
+                {
+                    Text = "Clear Logs",
+                    Size = new Size(400, 300),
+                    StartPosition = FormStartPosition.CenterParent,
+                    FormBorderStyle = FormBorderStyle.FixedDialog,
+                    MaximizeBox = false,
+                    MinimizeBox = false,
+                    BackColor = Color.White
+                })
+                {
+                    // Title
+                    var lblTitle = new Label()
+                    {
+                        Text = "Clear Logs Options",
+                        Location = new Point(20, 20),
+                        Size = new Size(350, 25),
+                        Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                        ForeColor = Color.FromArgb(70, 130, 180)
+                    };
+
+                    // Clear options - ONLY TWO OPTIONS
+                    var rbClearAll = new RadioButton()
+                    {
+                        Text = "🗑️ Clear ALL logs (UI + Database)",
+                        Location = new Point(30, 65),
+                        Size = new Size(350, 25),
+                        Checked = true,
+                        Font = new Font("Segoe UI", 9F)
+                    };
+
+                    var rbClearUIOnly = new RadioButton()
+                    {
+                        Text = "📱 Clear UI logs only (Keep database)",
+                        Location = new Point(30, 95),
+                        Size = new Size(350, 25),
+                        Font = new Font("Segoe UI", 9F)
+                    };
+
+                    // Warning label
+                    var lblWarning = new Label()
+                    {
+                        Text = "⚠️ This action cannot be undone!",
+                        Location = new Point(20, 135),
+                        Size = new Size(350, 20),
+                        Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                        ForeColor = Color.Red
+                    };
+
+                    // Buttons
+                    var btnClear = new Button()
+                    {
+                        Text = "🚮 Clear Logs",
+                        Location = new Point(90, 180),
+                        Size = new Size(100, 35),
+                        BackColor = Color.FromArgb(220, 53, 69),
+                        ForeColor = Color.White,
+                        Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                        DialogResult = DialogResult.OK
+                    };
+
+                    var btnCancel = new Button()
+                    {
+                        Text = "Cancel",
+                        Location = new Point(200, 180),
+                        Size = new Size(100, 35),
+                        BackColor = Color.FromArgb(108, 117, 125),
+                        ForeColor = Color.White,
+                        Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                        DialogResult = DialogResult.Cancel
+                    };
+
+                    // Add controls to form
+                    optionsForm.Controls.AddRange(new Control[]
+                    {
+                lblTitle,
+                rbClearAll,
+                rbClearUIOnly,
+                lblWarning,
+                btnClear,
+                btnCancel
+                    });
+
+                    var result = optionsForm.ShowDialog();
+
+                    if (result == DialogResult.OK)
+                    {
+                        if (rbClearAll.Checked)
+                        {
+                            // Clear from database AND UI
+                            int recordsDeleted = dbManager.ClearAllLogs();
+                            logTable.Clear();
+                            Log($"Cleared {recordsDeleted} logs from database and UI", "SYSTEM");
+
+                            MessageBox.Show(
+                                $"Successfully cleared {recordsDeleted} log entries from database and UI.",
+                                "Logs Cleared",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+                        }
+                        else if (rbClearUIOnly.Checked)
+                        {
+                            // Clear only UI, keep database
+                            dbManager.ClearLocalCacheOnly();
+                            logTable.Clear();
+                            Log("UI logs cleared (database preserved)", "SYSTEM");
+
+                            MessageBox.Show(
+                                "UI logs cleared successfully. Database logs preserved.",
+                                "UI Logs Cleared",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Log($"Failed to clear logs: {ex.Message}", "ERROR");
+                Log($"Clear operation failed: {ex.Message}", "ERROR");
                 MessageBox.Show(
                     $"Error clearing logs: {ex.Message}",
                     "Clear Error",
@@ -180,6 +272,7 @@ namespace Elevator_project.Utils
                     MessageBoxIcon.Error);
             }
         }
+
 
         public void Dispose()
         {

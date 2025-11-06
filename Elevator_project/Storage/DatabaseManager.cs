@@ -251,7 +251,7 @@ namespace Elevator_project.Storage
             LoadDataFromDatabase(); // Reload fresh data
         }
 
-        // -------------------- CLEAR LOGS METHOD --------------------
+        // -------------------- CLEAR LOGS METHODS --------------------
         public int ClearAllLogs()
         {
             try
@@ -261,23 +261,15 @@ namespace Elevator_project.Storage
                     LoadDataFromDatabase();
                 }
 
-                DataTable logsTable = elevatorDataSet.Tables["ElevatorLogs"];
-
-                // Clear local cache
-                logsTable.Clear();
-
-                // Clear database using disconnected model approach
+                // Clear database using DELETE command
                 using var conn = DBConfig.GetConnection();
                 conn.Open();
 
-                // Method 1: Using DELETE command with DataAdapter
                 var deleteCommand = new MySqlCommand("DELETE FROM ElevatorLogs", conn);
-
-                // Execute the delete command
                 int recordsDeleted = deleteCommand.ExecuteNonQuery();
 
-                // Refresh the local cache to reflect the empty state
-                LoadDataFromDatabase();
+                // Clear local cache
+                elevatorDataSet.Tables["ElevatorLogs"].Clear();
 
                 Console.WriteLine($"Cleared {recordsDeleted} log entries from database");
                 return recordsDeleted;
@@ -285,6 +277,22 @@ namespace Elevator_project.Storage
             catch (Exception ex)
             {
                 throw new Exception($"Failed to clear logs: {ex.Message}");
+            }
+        }
+
+        public void ClearLocalCacheOnly()
+        {
+            try
+            {
+                if (elevatorDataSet.Tables.Contains("ElevatorLogs"))
+                {
+                    elevatorDataSet.Tables["ElevatorLogs"].Clear();
+                }
+                Console.WriteLine("Local cache cleared successfully");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to clear local cache: {ex.Message}");
             }
         }
 

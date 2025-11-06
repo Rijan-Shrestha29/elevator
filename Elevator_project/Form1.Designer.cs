@@ -355,7 +355,7 @@
             btnClearLogs.Name = "btnClearLogs";
             btnClearLogs.Size = new Size(250, 45);
             btnClearLogs.TabIndex = 7;
-            btnClearLogs.Text = "🗑️ Clear All Logs";
+            btnClearLogs.Text = "🗑️ Clear Logs";
             btnClearLogs.UseVisualStyleBackColor = false;
             // 
             // MainForm

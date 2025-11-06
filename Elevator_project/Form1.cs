@@ -29,7 +29,7 @@ namespace Elevator_project
             btnRequest1.Click += (s, e) => controller.GoToFloor(1);
 
             btnShowLog.Click += (s, e) => logger.ShowLogs();
-            btnClearLogs.Click += (s, e) => logger.ClearAllLogs();
+            btnClearLogs.Click += (s, e) => logger.ClearLogsWithOptions();
 
             // Add door control buttons
             btnOpenDoors.Click += (s, e) => controller.ManualOpenDoors();
